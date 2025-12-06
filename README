@@ -1,0 +1,185 @@
+# PikaQuick - Food Ordering System
+
+A modern, full-featured food ordering platform built with Django, featuring real-time M-Pesa payment integration and an intuitive admin dashboard.
+
+
+# Customer Features
+- **Browse Menu** - Explore delicious food items with images and descriptions
+- **Shopping Cart** - Add, update, and remove items from your cart
+- **M-Pesa Payment** - Secure payment integration with Safaricom Daraja API (STK Push)
+- **Real-time Payment Tracking** - Track payment status in real-time
+- **User Authentication** - Secure registration and login system
+- **Order History** - View past orders and payment receipts
+
+# Admin Features
+- **Dashboard Analytics** - View total foods, available items, and sales statistics
+- **CRUD Operations** - Create, read, update, and delete food items
+- **Real-time Updates** - Toggle availability and update prices without page reload
+- **Image Management** - Upload and manage food images
+- **Category Management** - Organize foods by categories
+- **Payment Monitoring** - Track all M-Pesa transactions
+
+## Tech Stack
+
+- **Backend:** Django 6.0
+- **Database:** SQLite (Development) / PostgreSQL (Production Ready)
+- **Payment:** Safaricom Daraja API (M-Pesa)
+- **Frontend:** Bootstrap 5, JavaScript 
+- **Image Handling:** Pillow
+- **HTTP Client:** Requests
+
+## Prerequisites
+
+- Python 3.12+
+- pip (Python package manager)
+- Safaricom Daraja Developer Account
+- ngrok (for M-Pesa callback testing)
+
+## Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/pikaquick.git
+cd pikaquick
+```
+
+### 2. Create Virtual Environment
+```bash
+python -m venv .venv
+
+# Activate virtual environment
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Environment Configuration
+Create a `.env` file in the project root:
+```env
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+
+# M-Pesa Daraja Credentials
+MPESA_CONSUMER_KEY=your_consumer_key
+MPESA_CONSUMER_SECRET=your_consumer_secret
+MPESA_SHORTCODE=174379
+MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+MPESA_CALLBACK_URL=https://your-ngrok-url.ngrok.io/payments/callback/
+```
+
+### 5. Database Setup
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 6. Create Superuser
+```bash
+python manage.py createsuperuser
+```
+
+### 7. Run Development Server
+```bash
+python manage.py runserver
+```
+
+Visit: `http://127.0.0.1:8000`
+
+##  M-Pesa Setup
+
+### 1. Get Daraja Credentials
+1. Visit [Safaricom Daraja Portal](https://developer.safaricom.co.ke)
+2. Create an account and log in
+3. Create a new app and select "Lipa Na M-Pesa Online"
+4. Copy your **Consumer Key** and **Consumer Secret**
+
+
+
+
+### 3. Test M-Pesa Integration
+- Use sandbox test numbers: `254708374149` or `254712345678`
+- Test PIN: `0000` (for sandbox)
+
+## Project Structure
+
+```
+PikaQuick/
+├── accounts/           # User authentication app
+├── foods/              # Food items and cart management
+│   ├── models.py       # Food, Cart, CartItem models
+│   ├── views.py        # Product listing, cart views
+│   └── templates/      # Food and cart templates
+├── payments/           # M-Pesa payment integration
+│   ├── models.py       # MpesaPayment model
+│   ├── views.py        # Payment initiation and callback
+│   └── templates/      # Payment forms and status pages
+├── dashboard/          # Admin dashboard
+│   ├── views.py        # CRUD operations with AJAX
+│   └── templates/      # Dashboard UI
+├── pikaquick/          # Project settings
+│   ├── settings.py     # Main configuration
+│   └── urls.py         # URL routing
+├── templates/          # Base templates
+├── static/             # CSS, JS, images
+├── media/              # User uploaded files
+├── .env                # Environment variables (create this)
+├── .gitignore          # Git ignore file
+├── requirements.txt    # Python dependencies
+└── README.md           # This file
+```
+
+
+
+### Admin Flow
+1. Login at `/admin/` or `/dashboard/`
+2. View dashboard statistics
+3. Add new food items with images
+4. Toggle food availability in real-time
+5. Update prices instantly
+6. Monitor payments
+
+##  Security Features
+
+- CSRF Protection enabled
+- User authentication required for sensitive operations
+- Staff-only access to dashboard
+- Secure M-Pesa token handling
+- Password hashing with Django's built-in system
+
+
+
+## API Endpoints
+
+### Authentication
+- `POST /accounts/register/` - User registration
+- `POST /accounts/login/` - User login
+- `GET /accounts/logout/` - User logout
+
+### Products & Cart
+- `GET /products/` - List all foods
+- `GET /cart/` - View cart
+- `POST /cart/add/<food_id>/` - Add to cart
+- `POST /cart/update/<item_id>/` - Update quantity
+- `POST /cart/remove/<item_id>/` - Remove from cart
+
+### Payments
+- `POST /payments/initiate/` - Initiate M-Pesa payment
+- `POST /payments/callback/` - M-Pesa callback handler
+- `GET /payments/status/<payment_id>/` - Check payment status
+
+### Dashboard (Staff Only)
+- `GET /dashboard/` - Dashboard home
+- `POST /dashboard/add/` - Add food item
+- `POST /dashboard/edit/<food_id>/` - Update food item
+- `POST /dashboard/delete/<food_id>/` - Delete food item
+- `POST /dashboard/toggle-availability/<food_id>/` - Toggle availability
+- `POST /dashboard/update-price/<food_id>/` - Update price
+
+## Deployment

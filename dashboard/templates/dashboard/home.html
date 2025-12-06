@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block hero %}
+<!-- Dashboard Hero -->
+<section class="dashboard-hero mb-4">
+    <div class="container-fluid">
+        <div class="row align-items-center py-4">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold text-white mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-speedometer2 me-2" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+                        <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+                    </svg>
+                    Admin Dashboard
+                </h1>
+                <p class="text-white-50">Welcome back, {{ user.username }}!</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'dashboard:add_food' %}" class="btn btn-light btn-lg rounded-pill shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                    </svg>
+                    Add New Food Item
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.dashboard-hero {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Total Foods</p>
+                            <h2 class="fw-bold mb-0" id="totalFoods">{{ total_foods }}</h2>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 rounded-circle p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#0d6efd" viewBox="0 0 16 16">
+                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress" style="height: 4px;">
+                    <div class="progress-bar bg-primary" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Available</p>
+                            <h2 class="fw-bold mb-0 text-success" id="availableFoods">{{ available_foods }}</h2>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 rounded-circle p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#198754" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress" style="height: 4px;">
+                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Out of Stock</p>
+                            <h2 class="fw-bold mb-0 text-warning" id="outOfStock">{{ out_of_stock }}</h2>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 rounded-circle p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffc107" viewBox="0 0 16 16">
+                                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+                                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress" style="height: 4px;">
+                    <div class="progress-bar bg-warning" style="width: 15%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Categories</p>
+                            <h2 class="fw-bold mb-0" id="totalCategories">{{ total_categories }}</h2>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 rounded-circle p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#dc3545" viewBox="0 0 16 16">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress" style="height: 4px;">
+                    <div class="progress-bar bg-danger" style="width: 60%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="alertContainer"></div>
+
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-white border-end-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </span>
+                <input type="text" class="form-control border-start-0" placeholder="Search food items..." id="searchInput">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select form-select-lg" id="filterCategory">
+                <option value="all">All Categories</option>
+                <option value="pizza">Pizza</option>
+                <option value="burger">Burgers</option>
+                <option value="salad">Salads</option>
+                <option value="drinks">Drinks</option>
+                <option value="dessert">Desserts</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Food Items Table -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 py-4">
+            <h5 class="mb-0 fw-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#dc3545" class="bi bi-list-ul me-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                </svg>
+                Food Menu Management
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4 py-3">Image</th>
+                            <th class="py-3">Name</th>
+                            <th class="py-3">Category</th>
+                            <th class="py-3">Price</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Quick Edit</th>
+                            <th class="py-3 text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="foodTableBody">
+                        {% for food in foods %}
+                        <tr class="food-row" data-food-id="{{ food.id }}">
+                            <td class="px-4">
+                                {% if food.image %}
+                                    <img src="{{ food.image.url }}" class="rounded-3 shadow-sm food-image" alt="{{ food.name }}" style="width: 60px; height: 60px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#ccc" viewBox="0 0 16 16">
+                                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1z"/>
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold food-name">{{ food.name }}</h6>
+                                    <p class="text-muted small mb-0 food-description">{{ food.description|truncatewords:8 }}</p>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 food-category">
+                                    {{ food.category|default:"Uncategorized" }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="price-edit-container">
+                                    <span class="fw-bold text-danger food-price-display">Ksh {{ food.price|floatformat:0 }}</span>
+                                    <input type="number" class="form-control form-control-sm d-none price-input" value="{{ food.price }}" step="0.01" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input availability-toggle" type="checkbox" 
+                                           data-food-id="{{ food.id }}" 
+                                           {% if food.available %}checked{% endif %}
+                                           style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-success rounded-pill edit-price-btn" data-food-id="{{ food.id }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                    </svg>
+                                    Price
+                                </button>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'dashboard:edit_food' food.id %}" class="btn btn-sm btn-outline-primary rounded-start-pill">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10z"/>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger rounded-end-pill delete-food-btn" data-food-id="{{ food.id }}" data-food-name="{{ food.name }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#ccc" class="mb-3" viewBox="0 0 16 16">
+                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+                                </svg>
+                                <h5 class="text-muted">No food items yet</h5>
+                                <p class="text-muted">Start by adding your first menu item!</p>
+                                <a href="{% url 'dashboard:add_food' %}" class="btn btn-danger rounded-pill px-4">
+                                    Add Food Item
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+.food-row {
+    transition: background-color 0.2s ease;
+}
+.food-row:hover {
+    background-color: #f8f9fa;
+}
+.availability-toggle {
+    cursor: pointer;
+}
+.price-edit-container {
+    position: relative;
+}
+.price-input {
+    width: 120px;
+}
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.alert {
+    animation: slideIn 0.3s ease;
+}
+</style>
+
+<script>
+// Get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+// Show alert message
+function showAlert(message, type = 'success') {
+    const alertHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+            <strong>${message}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    document.getElementById('alertContainer').innerHTML = alertHTML;
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if (alert) alert.remove();
+    }, 5000);
+}
+
+// Update statistics
+function updateStats() {
+    const rows = document.querySelectorAll('.food-row');
+    const total = rows.length;
+    const available = document.querySelectorAll('.availability-toggle:checked').length;
+    const outOfStock = total - available;
+    
+    document.getElementById('totalFoods').textContent = total;
+    document.getElementById('availableFoods').textContent = available;
+    document.getElementById('outOfStock').textContent = outOfStock;
+}
+
+// Toggle availability with AJAX
+document.querySelectorAll('.availability-toggle').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+        const foodId = this.dataset.foodId;
+        const isAvailable = this.checked;
+        
+        fetch(`/dashboard/toggle-availability/${foodId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ available: isAvailable })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(`${data.food_name} is now ${isAvailable ? 'available' : 'out of stock'}`, 'success');
+                updateStats();
+            } else {
+                showAlert('Failed to update availability', 'danger');
+                this.checked = !isAvailable; // Revert
+            }
+        })
+        .catch(error => {
+            showAlert('Error updating availability', 'danger');
+            this.checked = !isAvailable; // Revert
+        });
+    });
+});
+
+// Quick price edit
+document.querySelectorAll('.edit-price-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const priceDisplay = row.querySelector('.food-price-display');
+        const priceInput = row.querySelector('.price-input');
+        
+        if (priceInput.classList.contains('d-none')) {
+            // Show input
+            priceDisplay.classList.add('d-none');
+            priceInput.classList.remove('d-none');
+            priceInput.focus();
+            this.textContent = 'Save';
+            this.classList.remove('btn-outline-success');
+            this.classList.add('btn-success');
+        } else {
+            // Save price
+            const foodId = this.dataset.foodId;
+            const newPrice = parseFloat(priceInput.value);
+            
+            if (isNaN(newPrice) || newPrice < 0) {
+                showAlert('Please enter a valid price', 'danger');
+                return;
+            }
+            
+            fetch(`/dashboard/update-price/${foodId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ price: newPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    priceDisplay.textContent = `Ksh ${Math.floor(newPrice)}`;
+                    priceDisplay.classList.remove('d-none');
+                    priceInput.classList.add('d-none');
+                    this.textContent = 'Price';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-success');
+                    showAlert(`Price updated to Ksh ${Math.floor(newPrice)}`, 'success');
+                } else {
+                    showAlert('Failed to update price', 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('Error updating price', 'danger');
+            });
+        }
+    });
+});
+
+// Delete food with AJAX
+document.querySelectorAll('.delete-food-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const foodId = this.dataset.foodId;
+        const foodName = this.dataset.foodName;
+        
+        if (confirm(`Are you sure you want to delete ${foodName}?`)) {
+            fetch(`/dashboard/delete/${foodId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove row with animation
+                    const row = this.closest('tr');
+                    row.style.transition = 'opacity 0.3s';
+                    row.style.opacity = '0';
+                    setTimeout(() => {
+                        row.remove();
+                        updateStats();
+                        showAlert(`${foodName} has been deleted`, 'success');
+                    }, 300);
+                } else {
+                    showAlert('Failed to delete item', 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('Error deleting item', 'danger');
+            });
+        }
+    });
+});
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('.food-row');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+
+// Category filter
+document.getElementById('filterCategory').addEventListener('change', function(e) {
+    const category = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('.food-row');
+    
+    rows.forEach(row => {
+        if (category === 'all') {
+            row.style.display = '';
+        } else {
+            const rowCategory = row.querySelector('.badge').textContent.toLowerCase();
+            row.style.display = rowCategory.includes(category) ? '' : 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>PikaQuick - {% block title %}{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        /* Custom Theme Colors */
+        :root {
+            --bs-theme-primary: #dc3545;
+            --bs-theme-secondary: #ffc107;
+        }
+        
+        .bg-custom-primary { 
+            background-color: var(--bs-theme-primary) !important; 
+        }
+        
+        .btn-custom-primary {
+            background-color: var(--bs-theme-primary);
+            border-color: var(--bs-theme-primary);
+            color: white;
+        }
+        
+        .btn-custom-primary:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+            color: white;
+        }
+
+        /* Hero section/Carousel */
+        .carousel-inner img {
+            height: 450px;
+            object-fit: cover;
+        }
+
+        /* Food cards */
+        .card { 
+            border: none; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: var(--bs-card-border-radius);
+            border-top-right-radius: var(--bs-card-border-radius);
+        }
+        
+        .card-body { 
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-custom-primary" href="{% url 'home' %}" style="color: var(--bs-theme-primary)">
+                PikaQuick
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <a class="nav-link fw-bold" href="{% url 'home' %}">Home</a>
+                    </li>
+                    
+                    {% if user.is_authenticated %}
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="{% url 'dashboard:dashboard_home' %}">Admin</a>
+
+                        </li>
+                        
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-custom-primary btn-sm" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="nav-item ms-3">
+                        <a class="nav-link text-warning" href="#" title="Your Cart">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="var(--bs-theme-secondary)" class="bi bi-basket-fill" viewBox="0 0 16 16">
+                                <path d="M5.757 1.071a.5.5 0 0 1 .184.255L6.447 2h-1.9L.159 10.417A.5.5 0 0 0 1 11h14a.5.5 0 0 0 .5-.5c0-.12-.045-.234-.125-.333L10.045 4zM2.872 10 7.5 4.382l-.488-.868A1.5 1.5 0 0 0 4.14 4H1.5L2.872 10zm11.332.193L9.5 4.382l.488-.868A1.5 1.5 0 0 1 13.86 4h2.64l-1.348 6.193z" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Featured Dishes Carousel -->
+    <div class="container mt-4">
+        {% block hero %}
+        <div id="foodCarousel" class="carousel slide mb-5 shadow rounded-3 overflow-hidden" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="2"></button>
+            </div>
+            
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Fresh Salad Bowl" />
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
+                        <h5>Fresh Salads, Fast Delivery!</h5>
+                    </div>
+                </div>
+                
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1620766212177-385202685068?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Delicious Pizza" />
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
+                        <h5>Hot & Crispy Pizzas</h5>
+                    </div>
+                </div>
+                
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Gourmet Burger" />
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
+                        <h5>Gourmet Burgers Made Daily</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-control-prev" type="button" data-bs-target="#foodCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            
+            <button class="carousel-control-next" type="button" data-bs-target="#foodCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        {% endblock %}
+    </div>
+
+    <!-- Popular Menu Items -->
+    <div class="container mt-4">
+        {% block content %}
+        <h3 class="text-center mb-4">Discover Our Delicious Selections</h3>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="https://images.unsplash.com/photo-1565299624942-43864a7895e6?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Pizza Slice" />
+                    <div class="card-body">
+                        <h5 class="card-title text-custom-primary">Pepperoni Pizza</h5>
+                        <p class="card-text text-muted">
+                            A classic favorite with premium mozzarella and spicy pepperoni.
+                        </p>
+                        <a href="#" class="btn btn-custom-primary">Order Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Green Salad" />
+                    <div class="card-body">
+                        <h5 class="card-title text-custom-primary">Chef's Salad</h5>
+                        <p class="card-text text-muted">
+                            Fresh, crisp greens with seasonal veggies and vinaigrette.
+                        </p>
+                        <a href="#" class="btn btn-custom-primary">Order Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="https://images.unsplash.com/photo-1586820573983-6593a20d2d31?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Tacos" />
+                    <div class="card-body">
+                        <h5 class="card-title text-custom-primary">Spicy Chicken Tacos</h5>
+                        <p class="card-text text-muted">
+                            Juicy marinated chicken in warm corn tortillas with toppings.
+                        </p>
+                        <a href="#" class="btn btn-custom-primary">Order Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-white py-4 mt-5 bg-custom-primary">
+        <div class="container">
+            <p class="mb-1 fw-light">
+                &copy; 2025 PikaQuick. All rights reserved. | Fresh Food Delivered Fast
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
