@@ -223,6 +223,7 @@ def payment_confirmation(request, payment_id):
         payment_status = 'failed'
     
     context = {
+        'payment': payment,  # Add the payment object
         'payment_status': payment_status,
         'transaction_id': payment.mpesa_receipt_number or payment.checkout_request_id,
         'phone_number': payment.phone_number,
@@ -233,7 +234,6 @@ def payment_confirmation(request, payment_id):
     }
     
     return render(request, 'payments/confirmation.html', context)
-
 
 @login_required
 def check_payment_status(request, payment_id):
