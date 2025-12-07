@@ -1,407 +1,266 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Dashboard - PikaQuick Admin{% endblock %}
 
-{% block hero %}
-<section class="dashboard-hero">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold text-white mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="me-3" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-                        <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
-                    </svg>
-                    Admin Dashboard
-                </h1>
-                <p class="lead text-white-50 mb-0">Manage your restaurant menu and orders</p>
-            </div>
-            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                <a href="{% url 'dashboard:add_food' %}" class="btn btn-light btn-lg px-4 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                        <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                    </svg>
-                    Add New Item
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<style>
-* {
-    font-family: 'Book Antiqua', 'Palatino Linotype', 'Times New Roman', serif;
-}
-
-.dashboard-hero {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-.dashboard-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
-    border-radius: 50%;
-}
-</style>
-{% endblock %}
+{% block hero %}{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <!-- Statistics Cards -->
-    <div class="row g-4 mb-5">
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-card stat-primary">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L4.07 1.243a.5.5 0 0 1 .686-.172z"/>
-                    </svg>
+<div class="admin-wrapper">
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center py-4">
+                <div class="col-md-6">
+                    <h1 class="mb-1 fw-bold">Dashboard</h1>
+                    <p class="text-muted mb-0">Welcome back, {{ user.username }}! 👋</p>
                 </div>
-                <div class="stat-details">
-                    <h3 class="stat-number">{{ foods.count }}</h3>
-                    <p class="stat-label">Total Items</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-card stat-success">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    </svg>
-                </div>
-                <div class="stat-details">
-                    <h3 class="stat-number">{{ available_foods }}</h3>
-                    <p class="stat-label">Available</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-card stat-warning">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-                    </svg>
-                </div>
-                <div class="stat-details">
-                    <h3 class="stat-number">{{ out_of_stock }}</h3>
-                    <p class="stat-label">Out of Stock</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-card stat-info">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
-                    </svg>
-                </div>
-                <div class="stat-details">
-                    <h3 class="stat-number">{{ total_categories }}</h3>
-                    <p class="stat-label">Categories</p>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <a href="{% url 'dashboard:add_food' %}" class="btn btn-danger btn-lg px-4">
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Add New Food
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Menu Items Table -->
-    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="card-header bg-gradient-primary text-white py-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0 fw-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
-                    </svg>
-                    Menu Items
-                </h4>
-                <span class="badge bg-white text-dark px-3 py-2 fs-6">{{ foods.count }} Items</span>
+    <!-- Stats -->
+    <div class="container-fluid px-4 py-4">
+        <div class="row g-3 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stats-card bg-primary">
+                    <div class="stats-icon">
+                        <i class="bi bi-basket"></i>
+                    </div>
+                    <div>
+                        <div class="stats-number">{{ total_foods }}</div>
+                        <div class="stats-label">Total Items</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stats-card bg-success">
+                    <div class="stats-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div>
+                        <div class="stats-number">{{ available_foods }}</div>
+                        <div class="stats-label">Available</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stats-card bg-warning">
+                    <div class="stats-icon">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+                    <div>
+                        <div class="stats-number">{{ out_of_stock }}</div>
+                        <div class="stats-label">Out of Stock</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stats-card bg-info">
+                    <div class="stats-icon">
+                        <i class="bi bi-grid"></i>
+                    </div>
+                    <div>
+                        <div class="stats-number">{{ total_categories }}</div>
+                        <div class="stats-label">Categories</div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            {% if foods %}
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 elegant-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th class="text-end pe-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for food in foods %}
-                        <tr class="food-row">
-                            <td class="ps-4">
-                                <div class="food-thumbnail">
+
+        <!-- Food Items -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Menu Items</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if foods %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="80">Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th width="200" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for food in foods %}
+                            <tr>
+                                <td>
                                     {% if food.image %}
-                                        <img src="{{ food.image.url }}" alt="{{ food.name }}">
+                                        <img src="{{ food.image.url }}" class="food-img" alt="{{ food.name }}">
                                     {% else %}
-                                        <div class="no-image">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
-                                            </svg>
+                                        <div class="food-img-placeholder">
+                                            <i class="bi bi-image"></i>
                                         </div>
                                     {% endif %}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="food-name">{{ food.name }}</div>
-                            </td>
-                            <td>
-                                <div class="food-description">{{ food.description|truncatewords:8 }}</div>
-                            </td>
-                            <td>
-                                <span class="price-tag">Ksh {{ food.price }}</span>
-                            </td>
-                            <td>
-                                {% if food.available %}
-                                    <span class="status-badge status-available">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        </svg>
-                                        Available
-                                    </span>
-                                {% else %}
-                                    <span class="status-badge status-unavailable">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-                                        </svg>
-                                        Out of Stock
-                                    </span>
-                                {% endif %}
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group" role="group">
-                                    <a href="{% url 'dashboard:edit_food' food.id %}" class="btn btn-sm btn-outline-primary rounded-start">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10z"/>
-                                        </svg>
-                                        Edit
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">{{ food.name }}</div>
+                                    <small class="text-muted">{{ food.description|truncatewords:10 }}</small>
+                                </td>
+                                <td>
+                                    {% if food.category %}
+                                        <span class="badge bg-light text-dark">{{ food.category }}</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-muted">Uncategorized</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold text-danger">Ksh {{ food.price|floatformat:0 }}</td>
+                                <td>
+                                    {% if food.available %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>Available
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-x-circle me-1"></i>Out of Stock
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'dashboard:edit_food' food.id %}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
-                                    <form method="POST" action="{% url 'dashboard:delete_food' food.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{ food.name }}?');">
+                                    <form method="POST" action="{% url 'dashboard:delete_food' food.id %}" class="d-inline" onsubmit="return confirm('Delete {{ food.name }}?');">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-end">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                            </svg>
-                                            Delete
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    <h5 class="mt-3 text-muted">No menu items yet</h5>
+                    <p class="text-muted">Start by adding your first food item</p>
+                    <a href="{% url 'dashboard:add_food' %}" class="btn btn-danger mt-2">
+                        <i class="bi bi-plus-lg me-2"></i>Add First Item
+                    </a>
+                </div>
+                {% endif %}
             </div>
-            {% else %}
-            <div class="empty-state py-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ccc" class="mb-4" viewBox="0 0 16 16">
-                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L4.07 1.243a.5.5 0 0 1 .686-.172z"/>
-                </svg>
-                <h4 class="text-muted mb-3">No menu items yet</h4>
-                <p class="text-muted mb-4">Start by adding your first food item</p>
-                <a href="{% url 'dashboard:add_food' %}" class="btn btn-primary btn-lg px-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                        <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                    </svg>
-                    Add First Item
-                </a>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
 
 <style>
-/* Statistics Cards */
-.stat-card {
-    padding: 2rem;
-    border-radius: 20px;
+.admin-wrapper {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding-bottom: 60px;
+}
+
+.admin-header {
+    background: white;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
-}
-
-.stat-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    gap: 1rem;
     color: white;
+    transition: transform 0.2s;
 }
 
-.stat-success {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: white;
+.stats-card:hover {
+    transform: translateY(-4px);
 }
 
-.stat-warning {
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-    color: white;
-}
-
-.stat-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-    color: white;
-}
-
-.stat-icon {
-    width: 70px;
-    height: 70px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1;
-}
-
-.stat-label {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-/* Table Styles */
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-}
-
-.elegant-table {
-    font-size: 0.95rem;
-}
-
-.elegant-table thead th {
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    padding: 1.2rem 1rem;
-    border-bottom: 2px solid #dee2e6;
-    color: #2c3e50;
-}
-
-.food-row {
-    transition: all 0.2s ease;
-}
-
-.food-row:hover {
-    background-color: #f8f9fa;
-    transform: scale(1.01);
-}
-
-.food-thumbnail {
+.stats-icon {
     width: 60px;
     height: 60px;
     border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.food-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.no-image {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6c757d;
+    background: rgba(255,255,255,0.2);
+    font-size: 1.75rem;
 }
 
-.food-name {
+.stats-number {
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 1rem;
-    color: #2c3e50;
+    line-height: 1;
+    margin-bottom: 0.25rem;
 }
 
-.food-description {
-    color: #6c757d;
+.stats-label {
     font-size: 0.9rem;
-    max-width: 300px;
+    opacity: 0.9;
 }
 
-.price-tag {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #dc3545;
-    background: linear-gradient(135deg, #dc3545, #ff6b7a);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.food-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
-.status-badge {
-    display: inline-flex;
+.food-img-placeholder {
+    width: 50px;
+    height: 50px;
+    background: #e9ecef;
+    border-radius: 8px;
+    display: flex;
     align-items: center;
-    padding: 0.4rem 1rem;
-    border-radius: 50px;
-    font-size: 0.85rem;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 1.25rem;
+}
+
+.table thead th {
     font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
 }
 
-.status-available {
-    background: rgba(40, 167, 69, 0.15);
-    color: #28a745;
+.table tbody tr {
+    transition: background-color 0.2s;
 }
 
-.status-unavailable {
-    background: rgba(220, 53, 69, 0.15);
-    color: #dc3545;
+.table tbody tr:hover {
+    background-color: #f8f9fa;
 }
 
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
+.card {
+    border-radius: 12px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .stat-card {
-        padding: 1.5rem;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
-    .food-description {
-        display: none;
-    }
+.btn-danger {
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    border-color: #bd2130;
 }
 </style>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 {% endblock %}

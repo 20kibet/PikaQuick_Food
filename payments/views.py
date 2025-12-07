@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib import messages
 from .models import MpesaPayment
-from foods.models import Cart
+from foods.models import Cart, CartItem
 import requests
 import base64
 from datetime import datetime
@@ -39,13 +39,16 @@ def initiate_payment(request):
         # Get ACTIVE cart and calculate total
         try:
             cart = Cart.objects.get(user=request.user, is_active=True)
+            cart_items = CartItem.objects.filter(cart=cart)
             amount = int(cart.total_price())  # M-Pesa amount must be integer
             
             if amount <= 0:
-                return JsonResponse({'error': 'Cart is empty'}, status=400)
+                messages.error(request, 'Your cart is empty')
+                return redirect('view_cart')
             
         except Cart.DoesNotExist:
-            return JsonResponse({'error': 'Cart not found'}, status=404)
+            messages.error(request, 'Cart not found')
+            return redirect('view_cart')
         
         # Format phone number (remove leading 0, add 254)
         if phone_number.startswith('0'):
@@ -56,7 +59,8 @@ def initiate_payment(request):
         # Get access token
         access_token = get_mpesa_access_token()
         if not access_token:
-            return JsonResponse({'error': 'Failed to authenticate with M-Pesa'}, status=500)
+            messages.error(request, 'Failed to authenticate with M-Pesa')
+            return redirect('view_cart')
         
         # Prepare STK Push request
         api_url = f"{settings.MPESA_SANDBOX_BASE_URL}/mpesa/stkpush/v1/processrequest"
@@ -101,31 +105,21 @@ def initiate_payment(request):
                 
                 # Store cart ID in session for later reference
                 request.session['pending_cart_id'] = cart.id
+                request.session['pending_payment_id'] = payment.id
                 
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Payment request sent. Please check your phone.',
-                    'checkout_request_id': response_data.get('CheckoutRequestID'),
-                    'payment_id': payment.id
-                })
+                # Redirect to confirmation page with pending status
+                return redirect('payment_confirmation', payment_id=payment.id)
             else:
-                return JsonResponse({
-                    'success': False,
-                    'error': response_data.get('errorMessage', 'Payment request failed')
-                }, status=400)
+                messages.error(request, response_data.get('errorMessage', 'Payment request failed'))
+                return redirect('view_cart')
                 
         except Exception as e:
             print(f"STK Push Error: {str(e)}")
-            return JsonResponse({'error': 'Failed to initiate payment'}, status=500)
+            messages.error(request, 'Failed to initiate payment. Please try again.')
+            return redirect('view_cart')
     
-    # GET request - show payment form
-    try:
-        cart = Cart.objects.get(user=request.user, is_active=True)
-        total = cart.total_price()
-    except Cart.DoesNotExist:
-        total = 0
-    
-    return render(request, 'payments/initiate_payment.html', {'total': total})
+    # GET request - redirect to cart
+    return redirect('view_cart')
 
 
 @csrf_exempt
@@ -169,12 +163,9 @@ def mpesa_callback(request):
                     # Mark user's ACTIVE cart as completed (inactive)
                     try:
                         cart = Cart.objects.get(user=payment.user, is_active=True)
-                        cart.is_active = False  # Mark as completed/inactive
+                        cart.is_active = False
                         cart.save()
-                        
-                        # Next time user adds to cart, a new active cart will be created
                         print(f"Cart {cart.id} marked as inactive after successful payment")
-                        
                     except Cart.DoesNotExist:
                         print(f"No active cart found for user {payment.user.id}")
                     
@@ -197,27 +188,56 @@ def mpesa_callback(request):
 
 
 @login_required
-def payment_status(request, payment_id):
-    """Check payment status"""
+def payment_confirmation(request, payment_id):
+    """Show payment confirmation/receipt page"""
     payment = get_object_or_404(MpesaPayment, id=payment_id, user=request.user)
     
-    # If payment is completed, ensure cart is marked inactive
-    if payment.status == 'completed':
+    # Get cart items (use the cart from session if available)
+    cart_id = request.session.get('pending_cart_id')
+    cart_items = []
+    
+    if cart_id:
+        try:
+            cart = Cart.objects.get(id=cart_id)
+            cart_items = CartItem.objects.filter(cart=cart)
+        except Cart.DoesNotExist:
+            pass
+    else:
+        # Fallback: try to get active cart
         try:
             cart = Cart.objects.get(user=request.user, is_active=True)
-            if cart:
-                cart.is_active = False
-                cart.save()
-                messages.success(request, 'Payment successful! Your order has been placed.')
+            cart_items = CartItem.objects.filter(cart=cart)
         except Cart.DoesNotExist:
             pass
     
-    return render(request, 'payments/payment_status.html', {'payment': payment})
+    # Calculate total with item totals
+    for item in cart_items:
+        item.total_price = item.food.price * item.quantity
+    
+    # Determine payment status
+    if payment.status == 'completed':
+        payment_status = 'success'
+    elif payment.status == 'pending':
+        payment_status = 'pending'
+    else:
+        payment_status = 'failed'
+    
+    context = {
+        'payment_status': payment_status,
+        'transaction_id': payment.mpesa_receipt_number or payment.checkout_request_id,
+        'phone_number': payment.phone_number,
+        'amount': payment.amount,
+        'payment_date': payment.transaction_date or payment.created_at,
+        'cart_items': cart_items,
+        'error_message': payment.result_desc if payment.status == 'failed' else None,
+    }
+    
+    return render(request, 'payments/confirmation.html', context)
 
 
 @login_required
 def check_payment_status(request, payment_id):
-    """AJAX endpoint to check payment status"""
+    """AJAX endpoint to check payment status and redirect if completed"""
     try:
         payment = MpesaPayment.objects.get(id=payment_id, user=request.user)
         
@@ -234,7 +254,15 @@ def check_payment_status(request, payment_id):
         return JsonResponse({
             'status': payment.status,
             'result_desc': payment.result_desc,
-            'mpesa_receipt': payment.mpesa_receipt_number
+            'mpesa_receipt': payment.mpesa_receipt_number,
+            'should_refresh': payment.status in ['completed', 'failed']
         })
     except MpesaPayment.DoesNotExist:
         return JsonResponse({'error': 'Payment not found'}, status=404)
+
+
+# Optional: Keep old payment_status view for backwards compatibility
+@login_required
+def payment_status(request, payment_id):
+    """Redirect to new confirmation page"""
+    return redirect('payment_confirmation', payment_id=payment_id)

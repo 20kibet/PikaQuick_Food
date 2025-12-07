@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Confirmation{% endblock %}
+
+{% block hero %}
+
+<section class="payment-hero payment-hero-{{ payment_status|default:'failed' }}">
+    <div class="container py-4">
+        <div class="text-center">
+            {% if payment_status == 'success' %}
+                <div class="success-icon mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                </div>
+                <h1 class="display-5 fw-bold text-white mb-2">Payment Successful!</h1>
+                <p class="text-white-50">Your order has been confirmed</p>
+            {% elif payment_status == 'pending' %}
+                <div class="pending-icon mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0zm0 14a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3.5H12a.5.5 0 0 1 0 1H8a.5.5 0 0 1-.5-.5V4.5A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                </div>
+                <h1 class="display-5 fw-bold text-white mb-2">Payment Processing</h1>
+                <p class="text-white-50">Please check your phone for M-Pesa prompt</p>
+            {% else %}
+                <div class="error-icon mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                    </svg>
+                </div>
+                <h1 class="display-5 fw-bold text-white mb-2">Payment Failed</h1>
+                <p class="text-white-50">There was an issue processing your payment</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+* {
+    font-family: 'Book Antiqua', 'Palatino Linotype', 'Times New Roman', serif;
+}
+
+.payment-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-hero-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.payment-hero-pending {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+.payment-hero-failed {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.payment-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
+    border-radius: 50%;
+}
+
+.success-icon, .pending-icon, .error-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.5s ease;
+}
+
+.success-icon svg {
+    color: white;
+}
+
+.pending-icon svg {
+    color: white;
+    animation: spin 2s linear infinite;
+}
+
+.error-icon svg {
+    color: white;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    .receipt-card {
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Receipt Card -->
+            <div class="card receipt-card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+                <div class="card-header bg-gradient-dark text-white py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 fw-bold">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27z"/>
+                                </svg>
+                                Payment Receipt
+                            </h4>
+                        </div>
+                        <div class="text-end">
+                            <small>Receipt #{{ transaction_id|default:"N/A" }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-5">
+                    <!-- Company Info -->
+                    <div class="text-center mb-5 pb-4 border-bottom">
+                        <h2 class="fw-bold mb-2" style="color: #dc3545;">🍽️ PikaQuick</h2>
+                        <p class="text-muted mb-1">Fresh Food Delivered Fast</p>
+                        <p class="text-muted small mb-0">Nairobi, Kenya | support@pikaquick.com</p>
+                    </div>
+
+                    <!-- Transaction Details -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-uppercase mb-3" style="color: #2c3e50;">Customer Details</h6>
+                            <div class="detail-item">
+                                <span class="text-muted">Name:</span>
+                                <span class="fw-semibold">{{ user.get_full_name|default:user.username }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted">Phone:</span>
+                                <span class="fw-semibold">{{ phone_number|default:"N/A" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted">Email:</span>
+                                <span class="fw-semibold">{{ user.email|default:"N/A" }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-uppercase mb-3" style="color: #2c3e50;">Transaction Info</h6>
+                            <div class="detail-item">
+                                <span class="text-muted">Date:</span>
+                                <span class="fw-semibold">{{ payment_date|default:"Today" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted">Transaction ID:</span>
+                                <span class="fw-semibold">{{ transaction_id|default:"Pending" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted">Payment Method:</span>
+                                <span class="fw-semibold">M-Pesa</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="text-muted">Status:</span>
+                                {% if payment_status == 'success' %}
+                                    <span class="badge bg-success px-3 py-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                        </svg>
+                                        Completed
+                                    </span>
+                                {% elif payment_status == 'pending' %}
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+                                        </svg>
+                                        Processing
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger px-3 py-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        </svg>
+                                        Failed
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Items -->
+                    {% if cart_items %}
+                    <h6 class="fw-bold text-uppercase mb-3" style="color: #2c3e50;">Order Summary</h6>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-borderless receipt-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">{{ item.food.name }}</div>
+                                        <small class="text-muted">{{ item.food.description|truncatewords:8 }}</small>
+                                    </td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-end">Ksh {{ item.food.price }}</td>
+                                    <td class="text-end fw-semibold">Ksh {{ item.total_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    <!-- Totals -->
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal:</span>
+                            <span class="fw-semibold">Ksh {{ amount|default:"0.00" }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Delivery Fee:</span>
+                            <span class="fw-semibold text-success">FREE</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Tax (0%):</span>
+                            <span class="fw-semibold">Ksh 0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">Total Amount:</h5>
+                            <h4 class="mb-0 fw-bold" style="color: #dc3545;">Ksh {{ amount|default:"0.00" }}</h4>
+                        </div>
+                    </div>
+
+                    <!-- Thank You Message -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <h5 class="fw-bold mb-2">Thank You for Your Order! 🎉</h5>
+                        <p class="text-muted mb-4">Your food will be delivered within 30 minutes</p>
+                        
+                        <!-- Status Message -->
+                        {% if payment_status == 'success' %}
+                            <div class="alert alert-success d-inline-flex align-items-center" role="alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Payment confirmed! You'll receive an SMS confirmation shortly.
+                            </div>
+                        {% elif payment_status == 'pending' %}
+                            <div class="alert alert-warning d-inline-flex align-items-center" role="alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                Please complete the payment on your phone. Check your M-Pesa notifications.
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger d-inline-flex align-items-center" role="alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                                </svg>
+                                {{ error_message|default:"Payment failed. Please try again or contact support." }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 justify-content-center no-print">
+                <button onclick="window.print()" class="btn btn-primary btn-lg px-5 rounded-pill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                    </svg>
+                    Print Receipt
+                </button>
+                
+                <a href="{% url 'home' %}" class="btn btn-outline-danger btn-lg px-5 rounded-pill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+                    </svg>
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+.receipt-card {
+    transition: all 0.3s ease;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.receipt-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.receipt-table tbody tr:last-child {
+    border-bottom: 2px solid #dee2e6;
+}
+
+@media print {
+    body {
+        background: white !important;
+    }
+    .container {
+        max-width: 100% !important;
+    }
+}
+</style>
+{% endblock %}
