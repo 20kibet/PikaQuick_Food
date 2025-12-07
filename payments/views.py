@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.utils import timezone
+from django.contrib import messages
 from .models import MpesaPayment
 from foods.models import Cart
 import requests
@@ -35,9 +36,9 @@ def initiate_payment(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         
-        # Get cart and calculate total
+        # Get ACTIVE cart and calculate total
         try:
-            cart = Cart.objects.get(user=request.user)
+            cart = Cart.objects.get(user=request.user, is_active=True)
             amount = int(cart.total_price())  # M-Pesa amount must be integer
             
             if amount <= 0:
@@ -88,7 +89,7 @@ def initiate_payment(request):
             response_data = response.json()
             
             if response_data.get('ResponseCode') == '0':
-                # Save payment record
+                # Save payment record with cart reference
                 payment = MpesaPayment.objects.create(
                     user=request.user,
                     phone_number=phone_number,
@@ -97,6 +98,9 @@ def initiate_payment(request):
                     checkout_request_id=response_data.get('CheckoutRequestID'),
                     status='pending'
                 )
+                
+                # Store cart ID in session for later reference
+                request.session['pending_cart_id'] = cart.id
                 
                 return JsonResponse({
                     'success': True,
@@ -116,7 +120,7 @@ def initiate_payment(request):
     
     # GET request - show payment form
     try:
-        cart = Cart.objects.get(user=request.user)
+        cart = Cart.objects.get(user=request.user, is_active=True)
         total = cart.total_price()
     except Cart.DoesNotExist:
         total = 0
@@ -162,12 +166,17 @@ def mpesa_callback(request):
                     
                     payment.status = 'completed'
                     
-                    # Clear user's cart
+                    # Mark user's ACTIVE cart as completed (inactive)
                     try:
-                        cart = Cart.objects.get(user=payment.user)
-                        cart.items.all().delete()
+                        cart = Cart.objects.get(user=payment.user, is_active=True)
+                        cart.is_active = False  # Mark as completed/inactive
+                        cart.save()
+                        
+                        # Next time user adds to cart, a new active cart will be created
+                        print(f"Cart {cart.id} marked as inactive after successful payment")
+                        
                     except Cart.DoesNotExist:
-                        pass
+                        print(f"No active cart found for user {payment.user.id}")
                     
                 else:
                     # Payment failed
@@ -192,6 +201,17 @@ def payment_status(request, payment_id):
     """Check payment status"""
     payment = get_object_or_404(MpesaPayment, id=payment_id, user=request.user)
     
+    # If payment is completed, ensure cart is marked inactive
+    if payment.status == 'completed':
+        try:
+            cart = Cart.objects.get(user=request.user, is_active=True)
+            if cart:
+                cart.is_active = False
+                cart.save()
+                messages.success(request, 'Payment successful! Your order has been placed.')
+        except Cart.DoesNotExist:
+            pass
+    
     return render(request, 'payments/payment_status.html', {'payment': payment})
 
 
@@ -200,6 +220,17 @@ def check_payment_status(request, payment_id):
     """AJAX endpoint to check payment status"""
     try:
         payment = MpesaPayment.objects.get(id=payment_id, user=request.user)
+        
+        # If payment completed, mark cart as inactive
+        if payment.status == 'completed':
+            try:
+                cart = Cart.objects.get(user=request.user, is_active=True)
+                if cart:
+                    cart.is_active = False
+                    cart.save()
+            except Cart.DoesNotExist:
+                pass
+        
         return JsonResponse({
             'status': payment.status,
             'result_desc': payment.result_desc,

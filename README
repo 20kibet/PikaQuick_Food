@@ -22,7 +22,7 @@ A modern, full-featured food ordering platform built with Django, featuring real
 ## Tech Stack
 
 - **Backend:** Django 6.0
-- **Database:** SQLite (Development) / PostgreSQL (Production Ready)
+- **Database:** SQLite (Development) / mariadb (Production Ready)
 - **Payment:** Safaricom Daraja API (M-Pesa)
 - **Frontend:** Bootstrap 5, JavaScript 
 - **Image Handling:** Pillow
@@ -39,7 +39,7 @@ A modern, full-featured food ordering platform built with Django, featuring real
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/pikaquick.git
+git clone https://github.com/20kibet/pikaquick_food.git
 cd pikaquick
 ```
 

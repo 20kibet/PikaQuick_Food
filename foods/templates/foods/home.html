@@ -3,22 +3,21 @@
 {% block title %}Order Food{% endblock %}
 
 {% block hero %}
-<!-- Hero Section with Search -->
-<section class="hero-order mb-4">
+<section class="hero-order">
     <div class="text-center py-5">
-        <h1 class="display-4 fw-bold text-dark mb-3">What are you craving today?</h1>
-        <p class="lead text-muted mb-4">Fresh food delivered fast to your doorstep</p>
+        <h1 class="display-4 fw-bold mb-3" style="color: #2c3e50;">What are you craving today?</h1>
+        <p class="lead mb-4" style="color: #6c757d;">Fresh food delivered fast to your doorstep</p>
         
-        <!-- Search Bar -->
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <form method="GET" action="{% url 'product_list' %}">
-                    <div class="input-group input-group-lg shadow-lg">
-                        <input type="text" class="form-control border-0" name="search" placeholder="Search for dishes, restaurants..." id="searchInput" value="{{ request.GET.search }}">
+                <form method="GET" action="{% url 'home' %}">
+                    <div class="input-group input-group-lg search-box">
+                        <span class="input-group-text border-0 bg-white">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 shadow-none" name="search" placeholder="Search for dishes, restaurants..." value="{{ request.GET.search }}" autocomplete="off">
                         <button class="btn btn-custom-primary px-4" type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                            </svg>
+                            <i class="bi bi-search me-1"></i> Search
                         </button>
                     </div>
                 </form>
@@ -28,223 +27,289 @@
 </section>
 
 <style>
-.btn-custom-primary {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: white;
-}
-.btn-custom-primary:hover {
-    background-color: #c82333;
-    border-color: #c82333;
-    color: white;
-}
 .hero-order {
     background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
     border-radius: 20px;
-    margin-bottom: 2rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-order::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+    border-radius: 50%;
+}
+
+.search-box {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    border-radius: 50px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 10px 40px rgba(220, 53, 69, 0.2);
+    transform: translateY(-2px);
+}
+
+.search-box .form-control {
+    padding: 12px 20px;
+}
+
+.search-box .form-control:focus {
+    outline: none;
+}
+
+.btn-custom-primary {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 0 50px 50px 0;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-primary:hover {
+    background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+    color: white;
+    transform: translateX(2px);
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Category Filter -->
-<section class="mb-5">
-    <h4 class="mb-4 fw-bold text-dark">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#dc3545" class="bi bi-grid-3x3-gap-fill me-2" viewBox="0 0 16 16">
-            <path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2z"/>
-        </svg>
-        Browse by Category
-    </h4>
-    <div class="d-flex gap-3 flex-wrap category-buttons">
-        <a href="{% url 'home' %}" class="btn btn-outline-danger btn-category {% if not request.GET.category %}active{% endif %}">
-            <span class="me-1">🍽️</span> All
-        </a>
-        <a href="{% url 'product_list' %}?category=pizza" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🍕</span> Pizza
-        </a>
-        <a href="{% url 'product_list' %}?category=burger" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🍔</span> Burgers
-        </a>
-        <a href="{% url 'product_list' %}?category=salad" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🥗</span> Salads
-        </a>
-        <a href="{% url 'product_list' %}?category=taco" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🌮</span> Tacos
-        </a>
-        <a href="{% url 'product_list' %}?category=noodles" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🍜</span> Noodles
-        </a>
-        <a href="{% url 'product_list' %}?category=dessert" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🍰</span> Desserts
-        </a>
-        <a href="{% url 'product_list' %}?category=drinks" class="btn btn-outline-danger btn-category">
-            <span class="me-1">🥤</span> Drinks
-        </a>
+<div class="container">
+    {% if cart_item_count and cart_item_count > 0 %}
+    <div class="alert alert-custom mb-4" role="alert">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-cart-check-fill fs-4 me-3" style="color: #dc3545;"></i>
+                <div>
+                    <strong>{{ cart_item_count }} item{{ cart_item_count|pluralize }}</strong> in your cart
+                </div>
+            </div>
+            <a href="{% url 'view_cart' %}" class="btn btn-sm btn-custom-primary rounded-pill">
+                View Cart <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
     </div>
-</section>
+    {% endif %}
 
-<!-- Popular Menu Items from Database -->
-<section class="mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold mb-0 text-dark">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#dc3545" class="bi bi-trophy-fill me-2" viewBox="0 0 16 16">
-                <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5zm.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935z"/>
-            </svg>
-            Popular Right Now
-        </h4>
-        <a href="{% url 'product_list' %}" class="text-danger text-decoration-none fw-semibold fs-6">
-            View All Menu
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-            </svg>
-        </a>
-    </div>
-    
-    <div class="row g-4" id="foodItems">
-        {% if foods %}
-            {% for food in foods %}
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="card h-100 food-card border-0 shadow-sm">
-                    <div class="position-relative overflow-hidden">
-                        {% if food.image %}
-                            <img src="{{ food.image.url }}" class="card-img-top food-img" alt="{{ food.name }}">
-                        {% else %}
-                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" class="card-img-top food-img" alt="{{ food.name }}">
-                        {% endif %}
-                        
-                        {% if food.is_available %}
-                            <span class="badge bg-success position-absolute top-0 end-0 m-3 px-3 py-2">Available</span>
-                        {% else %}
-                            <span class="badge bg-secondary position-absolute top-0 end-0 m-3 px-3 py-2">Out of Stock</span>
-                        {% endif %}
-                        
-                        <div class="food-overlay">
-                            <button class="btn btn-light btn-sm rounded-circle">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body p-3">
-                        <h6 class="card-title fw-bold mb-2">{{ food.name }}</h6>
-                        <p class="card-text text-muted small mb-3">{{ food.description|truncatewords:10 }}</p>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="rating">
-                                <span class="text-warning">★★★★★</span>
-                                <span class="text-muted small ms-1">({{ food.id }})</span>
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0" style="color: #2c3e50;">
+                <i class="bi bi-fire fs-4 me-2" style="color: #dc3545;"></i>
+                Popular Right Now
+            </h4>
+            <a href="{% url 'product_list' %}" class="text-danger text-decoration-none fw-semibold">
+                View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4" id="foodItems">
+            {% if foods %}
+                {% for food in foods %}
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card h-100 food-card">
+                        <div class="position-relative food-image-container">
+                            {% if food.image %}
+                                <img src="{{ food.image.url }}" class="card-img-top food-img" alt="{{ food.name }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" class="card-img-top food-img" alt="{{ food.name }}">
+                            {% endif %}
+                            
+                            {% if food.available %}
+                                <span class="badge-available">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Available
+                                </span>
+                            {% else %}
+                                <span class="badge-unavailable">
+                                    <i class="bi bi-x-circle-fill me-1"></i> Sold Out
+                                </span>
+                            {% endif %}
+                            
+                            <div class="food-overlay">
+                                <button class="btn btn-light btn-sm rounded-circle favorite-btn" title="Add to favorites">
+                                    <i class="bi bi-heart"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-danger fs-5">Ksh {{ food.price }}</span>
-                            {% if food.is_available %}
+                        
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold mb-2">{{ food.name }}</h6>
+                            <p class="card-text text-muted small mb-3">{{ food.description|truncatewords:12 }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="price-tag">KSh {{ food.price }}</span>
+                                <div class="rating">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-half text-warning"></i>
+                                    <span class="ms-1 small text-muted">(4.5)</span>
+                                </div>
+                            </div>
+                            
+                            {% if food.available %}
                                 {% if user.is_authenticated %}
-                                    <form method="POST" action="{% url 'add_to_cart' food.id %}" class="d-inline">
+                                    <form method="POST" action="{% url 'add_to_cart' food.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-custom-primary btn-sm px-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                                            </svg>
-                                            Add
+                                        <button type="submit" class="btn btn-custom-primary w-100 add-to-cart-btn">
+                                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
                                         </button>
                                     </form>
                                 {% else %}
-                                    <a href="{% url 'login' %}" class="btn btn-custom-primary btn-sm px-3">
-                                        Login to Add
+                                    <a href="{% url 'login' %}" class="btn btn-outline-danger w-100">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>Login to Order
                                     </a>
                                 {% endif %}
                             {% else %}
-                                <button class="btn btn-secondary btn-sm px-3" disabled>
-                                    Unavailable
+                                <button class="btn btn-secondary w-100" disabled>
+                                    <i class="bi bi-x-circle me-2"></i>Sold Out
                                 </button>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12 text-center py-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#dc3545" class="bi bi-basket mb-3" viewBox="0 0 16 16">
-                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L4.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
-                </svg>
-                <h3 class="text-muted">No food items available yet</h3>
-                <p class="text-muted">Check back soon for delicious options!</p>
-                {% if user.is_staff %}
-                    <a href="{% url 'dashboard:add_food' %}" class="btn btn-custom-primary">Add Your First Item</a>
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
-</section>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="bi bi-basket display-1 mb-4" style="color: #dc3545; opacity: 0.5;"></i>
+                        <h3 class="mb-3" style="color: #2c3e50;">No food items available yet</h3>
+                        <p class="text-muted mb-4">Check back soon for delicious options!</p>
+                        {% if user.is_staff %}
+                            <a href="{% url 'dashboard:add_food' %}" class="btn btn-custom-primary rounded-pill px-4">
+                                <i class="bi bi-plus-circle me-2"></i>Add Your First Item
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 
-<!-- Why Choose Us Section -->
-<section class="my-5 py-5 bg-light rounded-4">
-    <div class="row text-center g-4">
-        <div class="col-md-3 col-sm-6">
-            <div class="feature-icon mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#dc3545" viewBox="0 0 16 16">
-                    <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                </svg>
+    <section class="features-section my-5 py-5">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-truck" style="font-size: 3rem; color: #dc3545;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Fast Delivery</h5>
+                    <p class="text-muted small mb-0">Get your food in 30 minutes or less</p>
+                </div>
             </div>
-            <h5 class="fw-bold mb-2">Fast Delivery</h5>
-            <p class="text-muted small mb-0">Get your food in 30 minutes or less</p>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="feature-icon mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#dc3545" viewBox="0 0 16 16">
-                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
-                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                </svg>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-geo-alt" style="font-size: 3rem; color: #dc3545;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Track Order</h5>
+                    <p class="text-muted small mb-0">Real-time tracking of your delivery</p>
+                </div>
             </div>
-            <h5 class="fw-bold mb-2">Track Order</h5>
-            <p class="text-muted small mb-0">Real-time tracking of your delivery</p>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="feature-icon mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#dc3545" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-patch-check" style="font-size: 3rem; color: #dc3545;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Fresh Quality</h5>
+                    <p class="text-muted small mb-0">Only the freshest ingredients used</p>
+                </div>
             </div>
-            <h5 class="fw-bold mb-2">Fresh Quality</h5>
-            <p class="text-muted small mb-0">Only the freshest ingredients used</p>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="feature-icon mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#dc3545" viewBox="0 0 16 16">
-                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                </svg>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-credit-card" style="font-size: 3rem; color: #dc3545;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Easy Payment</h5>
+                    <p class="text-muted small mb-0">Secure M-Pesa payment</p>
+                </div>
             </div>
-            <h5 class="fw-bold mb-2">Easy Payment</h5>
-            <p class="text-muted small mb-0">Multiple secure payment options</p>
         </div>
-    </div>
-</section>
+    </section>
+</div>
 
 <style>
+/* Alert Box */
+.alert-custom {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+    border: 2px solid rgba(220, 53, 69, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+}
+
 /* Food Cards */
 .food-card {
-    transition: all 0.3s ease;
-    border-radius: 15px;
+    border: none;
+    border-radius: 20px;
     overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 .food-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.15) !important;
+    transform: translateY(-12px);
+    box-shadow: 0 12px 35px rgba(220, 53, 69, 0.15);
 }
 
-.food-card .food-img {
+.food-image-container {
+    overflow: hidden;
     height: 220px;
+    background: #f8f9fa;
+}
+
+.food-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
 .food-card:hover .food-img {
-    transform: scale(1.1);
+    transform: scale(1.15);
+}
+
+.badge-available {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(40, 167, 69, 0.95);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+}
+
+.badge-unavailable {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(108, 117, 125, 0.95);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    z-index: 2;
 }
 
 .food-overlay {
@@ -265,37 +330,129 @@
     opacity: 1;
 }
 
-/* Category Buttons */
-.btn-category {
-    padding: 10px 20px;
-    font-weight: 500;
-    border-radius: 25px;
+.favorite-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: all 0.3s ease;
-    border-width: 2px;
-    text-decoration: none;
 }
 
-.btn-category:hover, .btn-category.active {
-    background-color: #dc3545;
+.favorite-btn:hover {
+    transform: scale(1.1);
+    background: #dc3545 !important;
+    color: white !important;
+}
+
+.favorite-btn:hover i {
     color: white;
-    border-color: #dc3545;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
-/* Feature Icons */
+.card-body {
+    padding: 20px;
+}
+
+.price-tag {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #dc3545;
+    background: linear-gradient(135deg, #dc3545, #ff6b7a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.rating {
+    font-size: 0.85rem;
+}
+
+.add-to-cart-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+    color: white;
+}
+
+/* Features Section */
+.features-section {
+    background: linear-gradient(180deg, transparent, #f8f9fa, transparent);
+    border-radius: 24px;
+}
+
+.feature-box {
+    padding: 24px;
+    transition: transform 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-8px);
+}
+
 .feature-icon {
     display: inline-block;
-    padding: 15px;
+    padding: 20px;
     background: rgba(220, 53, 69, 0.1);
     border-radius: 50%;
     transition: all 0.3s ease;
 }
 
-.feature-icon:hover {
-    transform: scale(1.1);
-    background: rgba(220, 53, 69, 0.2);
+.feature-box:hover .feature-icon {
+    background: rgba(220, 53, 69, 0.15);
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 60px 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .food-card {
+        margin-bottom: 20px;
+    }
+    
+    .hero-order h1 {
+        font-size: 2rem;
+    }
+    
+    .price-tag {
+        font-size: 1.2rem;
+    }
 }
 </style>
+
+<script>
+// Add animation to favorite button
+document.querySelectorAll('.favorite-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('i');
+        if(icon.classList.contains('bi-heart')) {
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+            this.style.background = '#dc3545';
+            icon.style.color = 'white';
+        } else {
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+            this.style.background = 'white';
+            icon.style.color = '';
+        }
+    });
+});
+</script>
 
 {% endblock %}

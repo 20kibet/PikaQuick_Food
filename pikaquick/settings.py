@@ -56,19 +56,24 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'pikaquick.urls'
 
-LOGIN_REDIRECT_URL = 'home'  # Redirect to home after login
-LOGOUT_REDIRECT_URL = 'home'  # Redirect to home after logout
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = 'food_ordering'  # Redirect to food ordering page after login
+LOGOUT_REDIRECT_URL = 'landing_page'  # Redirect to landing page after logout
+
+# Context Processors (Add this to TEMPLATES)
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'foods.context_processors.cart_count',  # Add cart count to all templates
             ],
         },
     },
@@ -129,11 +134,11 @@ STATIC_URL = 'static/'
 
 # M-Pesa Daraja Configuration
 MPESA_ENVIRONMENT = 'sandbox'  # Change to 'production' when going live
-MPESA_CONSUMER_KEY = 'YOUR_CONSUMER_KEY_HERE'  # Get from daraja
-MPESA_CONSUMER_SECRET = 'YOUR_CONSUMER_SECRET_HERE'  # Get from daraja
+MPESA_CONSUMER_KEY = 'S9A4XejDcAtJzY4ILKjw9psmtoGUA4MtdooLCOZAWUdmCaYE'  # Get from daraja
+MPESA_CONSUMER_SECRET = 'i9hbIyUk1z3iyezNrwxm4XRYMCsl4xseMRyBLDvyMclvi7gEsfYvvjs4jfBmTPRb'  # Get from daraja
 MPESA_SHORTCODE = '174379'  # Sandbox shortcode
 MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'  # Sandbox passkey
-MPESA_CALLBACK_URL = 'https://your-ngrok-url.ngrok.io/payments/callback/'  # We'll set this up later
+MPESA_CALLBACK_URL = 'https://giggly-hank-hypermodestly.ngrok-free.dev/payments/callback/'
 
 # M-Pesa API URLs
 MPESA_SANDBOX_BASE_URL = 'https://sandbox.safaricom.co.ke'

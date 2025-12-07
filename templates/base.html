@@ -2,67 +2,383 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>PikaQuick - {% block title %}{% endblock %}</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PikaQuick - {% block title %}Fresh Food Delivered Fast{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom Theme Colors */
+        /* Custom Theme & Typography */
         :root {
-            --bs-theme-primary: #dc3545;
-            --bs-theme-secondary: #ffc107;
+            --primary-red: #dc3545;
+            --primary-red-dark: #c82333;
+            --primary-red-light: #ff6b7a;
+            --secondary-yellow: #ffc107;
+            --secondary-yellow-light: #ffd54f;
+            --gradient-start: #ffeaa7;
+            --gradient-end: #fdcb6e;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --bg-light: #f8f9fa;
         }
         
-        .bg-custom-primary { 
-            background-color: var(--bs-theme-primary) !important; 
+        * {
+            font-family: 'Poppins', sans-serif;
         }
         
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Enhanced Navigation */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-red-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary-red);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        /* Enhanced Buttons */
         .btn-custom-primary {
-            background-color: var(--bs-theme-primary);
-            border-color: var(--bs-theme-primary);
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
+            border: none;
             color: white;
+            font-weight: 600;
+            padding: 12px 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-custom-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-red-light), var(--primary-red));
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+        
+        .btn-custom-primary:hover::before {
+            left: 0;
         }
         
         .btn-custom-primary:hover {
-            background-color: #c82333;
-            border-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.3);
             color: white;
         }
-
-        /* Hero section/Carousel */
-        .carousel-inner img {
-            height: 450px;
-            object-fit: cover;
-        }
-
-        /* Food cards */
-        .card { 
-            border: none; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        
+        .btn-custom-primary * {
+            position: relative;
+            z-index: 1;
         }
         
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
-            border-top-left-radius: var(--bs-card-border-radius);
-            border-top-right-radius: var(--bs-card-border-radius);
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 8px;
+            margin-top: 8px;
         }
         
-        .card-body { 
-            text-align: center; 
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 16px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+            transform: translateX(5px);
+        }
+        
+        /* Enhanced Hero Section */
+        .hero-landing {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            border-radius: 30px;
+            margin: 20px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-landing::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -30px) scale(1.1); }
+        }
+        
+        .hero-landing h1 {
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            animation: slideInLeft 0.8s ease;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .hero-landing img {
+            animation: fadeInRight 0.8s ease;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Enhanced Cards */
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            display: inline-block;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.1));
+        }
+        
+        /* Category Cards */
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(220, 53, 69, 0.25);
+            border-color: var(--primary-red);
+        }
+        
+        .category-icon {
+            font-size: 3.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-card:hover .category-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        /* Section Headings */
+        .display-5, .display-4, .display-3 {
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+        
+        .lead {
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        
+        /* Stats Animation */
+        .stat-item {
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.1);
+        }
+        
+        .stat-item h2 {
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-red-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Steps Section */
+        .step-number {
+            position: relative;
+        }
+        
+        .step-number span {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-red-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .step-number span::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        
+        /* CTA Section Enhancement */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-red-dark), var(--primary-red));
+        }
+        
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Background Patterns */
+        .bg-light {
+            background: linear-gradient(180deg, #ffffff 0%, var(--bg-light) 100%) !important;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-landing {
+                padding: 40px 20px;
+                text-align: center;
+            }
+            
+            .hero-landing h1 {
+                font-size: 2.5rem;
+            }
+            
+            .display-4 {
+                font-size: 2rem;
+            }
+            
+            .display-5 {
+                font-size: 1.75rem;
+            }
+        }
+        
+        /* Loading Animation for Images */
+        img {
+            transition: opacity 0.3s ease;
+        }
+        
+        img:hover {
+            opacity: 0.95;
         }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-custom-primary" href="{% url 'home' %}" style="color: var(--bs-theme-primary)">
-                PikaQuick
+            <a class="navbar-brand" href="{% url 'home' %}">
+                 PikaQuick
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -73,136 +389,275 @@
                     </li>
                     
                     {% if user.is_authenticated %}
-                        <li class="nav-item me-3">
-                            <a class="nav-link" href="{% url 'dashboard:dashboard_home' %}">Admin</a>
-
-                        </li>
+                        {% if user.is_staff %}
+                            <li class="nav-item me-3">
+                                <a class="nav-link" href="{% url 'dashboard:dashboard_home' %}">
+                                    <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item me-3">
+                                <a class="nav-link position-relative" href="{% url 'view_cart' %}">
+                                    <i class="bi bi-cart3 fs-5" style="color: var(--secondary-yellow);"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ cart_count|default:0 }}
+                                    </span>
+                                </a>
+                            </li>
+                        {% endif %}
                         
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    Logout
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+                                    <i class="bi bi-box-arrow-right me-1"></i> Logout
                                 </button>
                             </form>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="btn btn-custom-primary btn-sm" href="{% url 'login' %}">Login</a>
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-custom-primary btn-sm dropdown-toggle rounded-pill" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i> Sign In
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'login' %}">
+                                        <i class="bi bi-person me-2"></i> Customer Login
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'login' %}?next=/dashboard/">
+                                        <i class="bi bi-shield-lock me-2"></i> Admin/Staff Login
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-success fw-semibold" href="{% url 'register' %}">
+                                        <i class="bi bi-person-plus me-2"></i> Create Account
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     {% endif %}
-
-                    <li class="nav-item ms-3">
-                        <a class="nav-link text-warning" href="#" title="Your Cart">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="var(--bs-theme-secondary)" class="bi bi-basket-fill" viewBox="0 0 16 16">
-                                <path d="M5.757 1.071a.5.5 0 0 1 .184.255L6.447 2h-1.9L.159 10.417A.5.5 0 0 0 1 11h14a.5.5 0 0 0 .5-.5c0-.12-.045-.234-.125-.333L10.045 4zM2.872 10 7.5 4.382l-.488-.868A1.5 1.5 0 0 0 4.14 4H1.5L2.872 10zm11.332.193L9.5 4.382l.488-.868A1.5 1.5 0 0 1 13.86 4h2.64l-1.348 6.193z" />
-                            </svg>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Featured Dishes Carousel -->
-    <div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="container-fluid px-0">
         {% block hero %}
-        <div id="foodCarousel" class="carousel slide mb-5 shadow rounded-3 overflow-hidden" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#foodCarousel" data-bs-slide-to="2"></button>
+        <section class="hero-landing">
+            <div class="container py-5">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <h1 class="display-3 fw-bold mb-4" style="color: #dc3545;">
+                            Fresh Food,<br>Delivered Fast ⚡
+                        </h1>
+                        <p class="lead mb-4" style="color: #555; font-size: 1.2rem;">
+                            Experience the joy of delicious meals delivered right to your doorstep. 
+                            Quality ingredients, expert chefs, lightning-fast delivery.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{% url 'login' %}" class="btn btn-custom-primary btn-lg px-5 rounded-pill shadow-lg">
+                                Order Now <i class="bi bi-arrow-right ms-2"></i>
+                            </a>
+                            <a href="#about" class="btn btn-outline-danger btn-lg px-5 rounded-pill">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" 
+                             class="img-fluid" 
+                             alt="Delicious Food"
+                             loading="lazy">
+                    </div>
+                </div>
             </div>
-            
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Fresh Salad Bowl" />
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
-                        <h5>Fresh Salads, Fast Delivery!</h5>
-                    </div>
-                </div>
-                
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1620766212177-385202685068?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Delicious Pizza" />
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
-                        <h5>Hot & Crispy Pizzas</h5>
-                    </div>
-                </div>
-                
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1650&q=80" class="d-block w-100" alt="Gourmet Burger" />
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
-                        <h5>Gourmet Burgers Made Daily</h5>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="carousel-control-prev" type="button" data-bs-target="#foodCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            
-            <button class="carousel-control-next" type="button" data-bs-target="#foodCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+        </section>
         {% endblock %}
     </div>
 
-    <!-- Popular Menu Items -->
-    <div class="container mt-4">
-        {% block content %}
-        <h3 class="text-center mb-4">Discover Our Delicious Selections</h3>
-        
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://images.unsplash.com/photo-1565299624942-43864a7895e6?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Pizza Slice" />
-                    <div class="card-body">
-                        <h5 class="card-title text-custom-primary">Pepperoni Pizza</h5>
-                        <p class="card-text text-muted">
-                            A classic favorite with premium mozzarella and spicy pepperoni.
-                        </p>
-                        <a href="#" class="btn btn-custom-primary">Order Now</a>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    {% block content %}
+    <!-- About Section -->
+    <section id="about" class="py-5 mt-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Why Choose PikaQuick? ✨</h2>
+                <p class="lead text-muted">We're not just a food delivery service, we're your culinary partner</p>
             </div>
             
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Green Salad" />
-                    <div class="card-body">
-                        <h5 class="card-title text-custom-primary">Chef's Salad</h5>
-                        <p class="card-text text-muted">
-                            Fresh, crisp greens with seasonal veggies and vinaigrette.
-                        </p>
-                        <a href="#" class="btn btn-custom-primary">Order Now</a>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="text-center p-4 h-100 card shadow-sm">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-truck" style="font-size: 3rem; color: #dc3545;"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Lightning Fast ⚡</h4>
+                        <p class="text-muted">30-minute delivery guarantee or your money back. We value your time.</p>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="https://images.unsplash.com/photo-1586820573983-6593a20d2d31?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Tacos" />
-                    <div class="card-body">
-                        <h5 class="card-title text-custom-primary">Spicy Chicken Tacos</h5>
-                        <p class="card-text text-muted">
-                            Juicy marinated chicken in warm corn tortillas with toppings.
-                        </p>
-                        <a href="#" class="btn btn-custom-primary">Order Now</a>
+                
+                <div class="col-md-4">
+                    <div class="text-center p-4 h-100 card shadow-sm">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-patch-check-fill" style="font-size: 3rem; color: #dc3545;"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Quality First 👨‍🍳</h4>
+                        <p class="text-muted">Fresh ingredients, expert preparation, and rigorous quality checks every time.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="text-center p-4 h-100 card shadow-sm">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-star-fill" style="font-size: 3rem; color: #dc3545;"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Top Rated ⭐</h4>
+                        <p class="text-muted">Thousands of 5-star reviews from happy customers across the city.</p>
                     </div>
                 </div>
             </div>
         </div>
-        {% endblock %}
-    </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">How It Works 🚀</h2>
+                <p class="lead text-muted">Get delicious food in three simple steps</p>
+            </div>
+            
+            <div class="row g-5 align-items-center">
+                <div class="col-md-4 text-center">
+                    <div class="step-number mb-4">
+                        <span class="display-3 fw-bold">1</span>
+                    </div>
+                    <h4 class="fw-bold mb-3">Browse Menu 📱</h4>
+                    <p class="text-muted">Explore our diverse selection of delicious meals from top-rated restaurants.</p>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <div class="step-number mb-4">
+                        <span class="display-3 fw-bold">2</span>
+                    </div>
+                    <h4 class="fw-bold mb-3">Place Order 🛒</h4>
+                    <p class="text-muted">Add favorites to cart and checkout securely with M-Pesa in seconds.</p>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <div class="step-number mb-4">
+                        <span class="display-3 fw-bold">3</span>
+                    </div>
+                    <h4 class="fw-bold mb-3">Enjoy Meal 😋</h4>
+                    <p class="text-muted">Sit back and relax while we deliver hot, fresh food right to your door.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Popular Categories 🍽️</h2>
+                <p class="lead text-muted">Explore our most loved food categories</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-4 shadow-sm h-100">
+                        <div class="category-icon mb-3">🍕</div>
+                        <h5 class="fw-bold">Pizza</h5>
+                        <p class="text-muted small mb-0">Hot & Crispy</p>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-4 shadow-sm h-100">
+                        <div class="category-icon mb-3">🍔</div>
+                        <h5 class="fw-bold">Burgers</h5>
+                        <p class="text-muted small mb-0">Juicy & Fresh</p>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-4 shadow-sm h-100">
+                        <div class="category-icon mb-3">🥗</div>
+                        <h5 class="fw-bold">Salads</h5>
+                        <p class="text-muted small mb-0">Fresh & Healthy</p>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-4 shadow-sm h-100">
+                        <div class="category-icon mb-3">🍰</div>
+                        <h5 class="fw-bold">Desserts</h5>
+                        <p class="text-muted small mb-0">Sweet Treats</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 cta-section">
+        <div class="container text-center text-white py-5 position-relative">
+            <h2 class="display-4 fw-bold mb-4">Ready to Order? 🎉</h2>
+            <p class="lead mb-4">Join thousands of satisfied customers and experience the PikaQuick difference today!</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{% url 'login' %}" class="btn btn-light btn-lg px-5 rounded-pill shadow-lg fw-semibold">
+                    Get Started Now
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill fw-semibold">
+                    Create Account
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h2 class="display-4 fw-bold mb-2">10K+</h2>
+                        <p class="text-muted mb-0 fw-semibold">Happy Customers</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h2 class="display-4 fw-bold mb-2">50+</h2>
+                        <p class="text-muted mb-0 fw-semibold">Restaurant Partners</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h2 class="display-4 fw-bold mb-2">30min</h2>
+                        <p class="text-muted mb-0 fw-semibold">Average Delivery</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h2 class="display-4 fw-bold mb-2">4.9⭐</h2>
+                        <p class="text-muted mb-0 fw-semibold">Customer Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
 
     <!-- Footer -->
-    <footer class="text-center text-white py-4 mt-5 bg-custom-primary">
+    <footer class="text-center text-white py-4 mt-5">
         <div class="container">
             <p class="mb-1 fw-light">
-                &copy; 2025 PikaQuick. All rights reserved. | Fresh Food Delivered Fast
+                &copy; 2025 PikaQuick. All rights reserved. | Fresh Food Delivered Fast 
             </p>
         </div>
     </footer>
