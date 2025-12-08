@@ -7,6 +7,13 @@ from django.views.decorators.http import require_POST
 from foods.models import Food
 from django.db.models import Count, Q
 import json
+from django.contrib.auth.models import User 
+from datetime import datetime
+
+# F:\PikaQuick\dashboard\views.py (Add this line with other model imports)
+from foods.models import Cart
+from foods.models import CartItem
+
 
 # Check if user is staff/admin
 def is_staff_user(user):
@@ -185,6 +192,37 @@ def update_price(request, food_id):
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=400)
 
+
+@login_required
+@user_passes_test(is_staff_user)
+def print_report(request):
+    """Generate printable report"""
+    
+    # Get all statistics
+    total_foods = Food.objects.count()
+    available_foods = Food.objects.filter(available=True).count()
+    out_of_stock = Food.objects.filter(available=False).count()
+    total_users = User.objects.filter(is_staff=False).count()
+    
+    # Get all foods
+    foods = Food.objects.all().order_by('-id')
+    
+    # Get cart statistics
+    total_carts = Cart.objects.count()
+    total_cart_items = CartItem.objects.count()
+    
+    context = {
+        'total_foods': total_foods,
+        'available_foods': available_foods,
+        'out_of_stock': out_of_stock,
+        'total_users': total_users,
+        'total_carts': total_carts,
+        'total_cart_items': total_cart_items,
+        'foods': foods,
+        'report_date': datetime.now(),
+    }
+    
+    return render(request, 'dashboard/print_report.html', context)
 
 # ============================================
 # Dashboard/urls.py - Updated with AJAX endpoints

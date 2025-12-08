@@ -106,6 +106,8 @@ def remove_from_cart(request, item_id):
     return redirect('view_cart')
 
 
+# foods/views.py
+
 @login_required
 def view_cart(request):
     """Display cart with all items"""
@@ -122,7 +124,8 @@ def view_cart(request):
     return render(request, 'foods/cart.html', {
         'cart': cart,
         'cart_items': cart_items,
-        'total_amount': total_amount
+        # 🔑 CHANGE THIS LINE: Mismatch fixed
+        'total': total_amount 
     })
 
 

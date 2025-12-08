@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PikaQuick - Dashboard Report</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            /* Mimic A4 margins for professional reports */
+            padding: 25mm 20mm; 
+            background: #f4f4f9; /* Light grey background for web view */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .report-container {
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Header */
+        .header {
+            text-align: left;
+            border-bottom: 4px solid #007bff; /* Professional blue primary color */
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .header-left h1 {
+            color: #007bff;
+            font-size: 30px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .header-left h2 {
+            color: #6c757d;
+            font-size: 18px;
+            font-weight: 400;
+        }
+        
+        .header-right p {
+            color: #6c757d;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        /* Report Info */
+        .report-meta {
+            margin-bottom: 30px;
+            padding: 10px 15px;
+            background: #e9f5ff; /* Light blue background for emphasis */
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .report-meta strong {
+            color: #004085;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+             transform: translateY(-2px);
+        }
+        
+        .stat-card h3 {
+            font-size: 28px;
+            color: #28a745; /* Use green for positive metrics */
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .stat-card:nth-child(3) h3 {
+            color: #dc3545; /* Use red for negative metrics (out of stock) */
+        }
+        .stat-card:nth-child(1) h3, .stat-card:nth-child(4) h3 {
+            color: #007bff; /* Use primary blue for totals */
+        }
+        
+        .stat-card p {
+            color: #6c757d;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* Section Headings */
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        /* Table Styles */
+        .foods-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .foods-table thead {
+            background: #2c3e50; /* Darker header for contrast */
+            color: white;
+        }
+        
+        .foods-table th,
+        .foods-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        .foods-table td:first-child {
+            font-weight: bold;
+            text-align: center;
+            width: 5%;
+        }
+
+        .foods-table tbody tr:nth-child(even) {
+            background: #f8f9fa; /* Zebra striping for readability */
+        }
+        
+        .foods-table tbody tr:hover {
+            background: #e9ecef;
+        }
+        
+        .status-available {
+            color: #28a745; /* Green */
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-unavailable {
+            color: #dc3545; /* Red */
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 11px;
+            border-top: 1px dashed #ced4da;
+            padding-top: 15px;
+        }
+
+        /* Print and Back Buttons */
+        .no-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .btn-action {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            margin-left: 10px;
+        }
+        
+        .btn-print-primary {
+            background: #007bff; /* Primary blue for printing */
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-print-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-back {
+            background: #6c757d; 
+            color: white;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+        
+        /* Print Media Queries */
+        @media print {
+            body {
+                padding: 10mm;
+                background: white;
+            }
+            
+            .report-container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .header {
+                border-bottom: 4px solid #333; /* Darker border for print contrast */
+            }
+
+            .header-left h1 {
+                color: #333;
+            }
+
+            .report-meta {
+                background: #f1f1f1;
+                border-left: 5px solid #333;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+            
+            .stat-card {
+                break-inside: avoid;
+                border: 1px solid #ddd;
+                box-shadow: none;
+                background: #f9f9f9;
+            }
+            
+            .foods-table {
+                page-break-inside: auto;
+            }
+            
+            .foods-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="no-print">
+            <button onclick="window.history.back()" class="btn-action btn-back">
+                ← Back to Dashboard
+            </button>
+            <button onclick="window.print()" class="btn-action btn-print-primary">
+                🖨️ Print Report
+            </button>
+        </div>
+
+        <div class="header">
+            <div class="header-left">
+                <h1>PikaQuick</h1>
+                <h2>Official Dashboard Report</h2>
+            </div>
+             <div class="header-right">
+                <p>Generated By: {{ user.username }}</p>
+                <p>Fresh Food Delivered Fast</p>
+            </div>
+        </div>
+
+        <div class="report-meta">
+            <span>
+                <strong>Report Date:</strong> {{ report_date|date:"F d, Y" }}
+            </span>
+            <span>
+                <strong>Time Generated:</strong> {{ report_date|date:"g:i A T" }}
+            </span>
+        </div>
+
+        <h3 style="margin-bottom: 20px;"> Key Performance Indicators</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>{{ total_foods }}</h3>
+                <p>Total Food Items</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ available_foods }}</h3>
+                <p>Available for Sale</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ out_of_stock }}</h3>
+                <p>Out of Stock</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ total_users }}</h3>
+                <p>Total Customers</p>
+            </div>
+        </div>
+
+        {% if total_carts or total_cart_items %}
+        <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="stat-card">
+                <h3>{{ total_carts }}</h3>
+                <p>Total Carts Created</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ total_cart_items }}</h3>
+                <p>Total Items in Carts</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <h3> Food Inventory Details</h3>
+        <table class="foods-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Unit Price (Ksh)</th>
+                    <th>Current Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for food in foods %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ food.name }}</td>
+                    <td>{{ food.category|default:"N/A" }}</td>
+                    <td>{{ food.price }}</td>
+                    <td>
+                        {% if food.available %}
+                            <span class="status-available">AVAILABLE</span>
+                        {% else %}
+                            <span class="status-unavailable">OUT OF STOCK</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">
+                        No food inventory data available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>*** End of Report ***</p>
+            <p>Confidential Document &bull; &copy; 2025 PikaQuick.</p>
+        </div>
+    </div>
+
+    <script>
+        // Existing script remains
+        // window.onload = function() { window.print(); }
+    </script>
+</body>
+</html>

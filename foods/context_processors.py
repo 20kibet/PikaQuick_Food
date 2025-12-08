@@ -5,10 +5,11 @@ def cart_count(request):
     """
     if request.user.is_authenticated:
         try:
-            from .models import Cart
-            cart_items = Cart.objects.filter(user=request.user)
-            count = sum(item.quantity for item in cart_items)
-            return {'cart_count': count}
+            from .models import Cart, CartItem
+            cart = Cart.objects.filter(user=request.user).first()
+            if cart:
+                count = CartItem.objects.filter(cart=cart).count()
+                return {'cart_count': count}
         except Exception:
             return {'cart_count': 0}
     return {'cart_count': 0}

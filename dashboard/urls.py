@@ -9,6 +9,7 @@ urlpatterns = [
     path('add/', views.add_food, name='add_food'),
     path('edit/<int:food_id>/', views.edit_food, name='edit_food'),
     path('delete/<int:food_id>/', views.delete_food, name='delete_food'),
+    path('print-report/', views.print_report, name='print_report'),
     
     # AJAX endpoints
     path('toggle-availability/<int:food_id>/', views.toggle_availability, name='toggle_availability'),

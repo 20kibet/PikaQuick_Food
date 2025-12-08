@@ -142,7 +142,8 @@
             cursor: pointer;
             color: #6c757d;
             z-index: 10;
-            transition: color 0.3s ease;
+            /* Added transition for smoother hover effect */
+            transition: color 0.2s ease, transform 0.2s ease;
             font-size: 0.9rem;
         }
         
@@ -294,7 +295,7 @@
                     
                     <div class="mb-3">
                         <label for="id_username" class="form-label">
-                            <i class="bi bi-person-circle me-1"></i> Username
+                            <i class="bi bi-person-circle me-1"></i> Username <span class="text-danger">*</span>
                         </label>
                         <div class="input-group">
                             <i class="bi bi-person input-icon"></i>
@@ -344,7 +345,7 @@
                     
                     <div class="mb-3">
                         <label for="id_password1" class="form-label">
-                            <i class="bi bi-lock-fill me-1"></i> Password
+                            <i class="bi bi-lock-fill me-1"></i> Password <span class="text-danger">*</span>
                         </label>
                         <div class="input-group position-relative">
                             <i class="bi bi-shield-lock input-icon"></i>
@@ -374,7 +375,7 @@
                     
                     <div class="mb-3">
                         <label for="id_password2" class="form-label">
-                            <i class="bi bi-lock-fill me-1"></i> Confirm Password
+                            <i class="bi bi-lock-fill me-1"></i> Confirm Password <span class="text-danger">*</span>
                         </label>
                         <div class="input-group position-relative">
                             <i class="bi bi-shield-check input-icon"></i>
@@ -426,6 +427,7 @@
                 const input = this.previousElementSibling;
                 const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
                 input.setAttribute('type', type);
+                // Toggle the eye icon class
                 this.classList.toggle('bi-eye');
                 this.classList.toggle('bi-eye-slash');
             });
@@ -438,16 +440,24 @@
         if (password1 && strengthBar) {
             password1.addEventListener('input', function() {
                 const value = this.value;
+                // Reset classes before adding the new one
                 strengthBar.className = 'password-strength-bar';
+                strengthBar.style.width = '0'; // Default to 0
                 
                 if (value.length === 0) {
                     strengthBar.style.width = '0';
                 } else if (value.length < 6) {
+                    // Too short, use weak color but show a small width
                     strengthBar.classList.add('password-strength-weak');
+                    strengthBar.style.width = '10%'; 
                 } else if (value.length < 10) {
+                    // Medium strength
                     strengthBar.classList.add('password-strength-medium');
+                    strengthBar.style.width = '66%'; 
                 } else {
+                    // Strong strength
                     strengthBar.classList.add('password-strength-strong');
+                    strengthBar.style.width = '100%'; 
                 }
             });
         }

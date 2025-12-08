@@ -224,6 +224,14 @@
         .password-toggle:hover {
             color: var(--primary-red);
         }
+
+        .forgot-password-link {
+            display: block;
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 15px; 
+            font-size: 0.85rem;
+        }
         
         @media (max-width: 576px) {
             .login-body {
@@ -301,7 +309,7 @@
                                 placeholder="Enter your password"
                                 required
                                 autocomplete="current-password">
-                            <i class="bi bi-eye password-toggle" id="togglePassword"></i>
+                            <i class="bi bi-eye-slash password-toggle" id="togglePassword"></i>
                         </div>
                         {% if form.password.errors %}
                         <div class="text-danger mt-1">
@@ -340,6 +348,8 @@
             togglePassword.addEventListener('click', function() {
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
+                
+                // Toggle the icons: slash (hidden) <-> eye (visible)
                 this.classList.toggle('bi-eye');
                 this.classList.toggle('bi-eye-slash');
             });
