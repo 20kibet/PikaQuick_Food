@@ -150,3 +150,17 @@ MPESA_CALLBACK_URL = 'https://giggly-hank-hypermodestly.ngrok-free.dev/payments/
 # M-Pesa API URLs
 MPESA_SANDBOX_BASE_URL = 'https://sandbox.safaricom.co.ke'
 MPESA_PRODUCTION_BASE_URL = 'https://api.safaricom.co.ke'
+
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'gkibetronoh10@gmail.com'  # ← Your Gmail address
+EMAIL_HOST_PASSWORD = 'zmte bons umrw mlpm'  # ← Paste your 16-char app password (remove spaces)
+DEFAULT_FROM_EMAIL = 'PikaQuick <gkibetronoh10@gmail.com>'
+SERVER_EMAIL = 'gkibetronoh10@gmail.com'
+
+    

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to PikaQuick</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        .email-wrapper {
+            max-width: 680px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.08);
+        }
+
+        /* Hero Header */
+        .hero-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+        .hero-icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hero-header h1 {
+            font-size: 38px;
+            font-weight: 700;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .hero-header p {
+            font-size: 17px;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 45px 35px;
+        }
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .welcome-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Account Card */
+        .account-card {
+            background: #f1f3f5;
+            border-radius: 15px;
+            padding: 25px 30px;
+            border-left: 5px solid #dc3545;
+            margin-bottom: 35px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        }
+        .account-card h3 {
+            color: #dc3545;
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-weight: 600; color: #2c3e50; }
+        .detail-value { color: #555; }
+
+        /* Features */
+        .features h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .feature-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #555;
+        }
+        .feature-item:hover {
+            border-color: #dc3545;
+            box-shadow: 0 8px 25px rgba(220,53,69,0.15);
+            transform: translateY(-5px);
+        }
+
+        /* CTA Button */
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 25px;
+            background: #fff3cd;
+            border-radius: 15px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: #fff;
+            padding: 15px 50px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(220,53,69,0.25);
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(220,53,69,0.35);
+        }
+
+        /* Support Box */
+        .support-box {
+            background: #e8f5e9;
+            border-left: 5px solid #28a745;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .support-box h4 { color: #28a745; margin-bottom: 10px; font-size: 18px; }
+        .support-box p { color: #555; line-height: 1.6; }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: #fff;
+            padding: 35px 20px;
+            text-align: center;
+        }
+        .footer-brand { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .footer-tagline { font-size: 16px; opacity: 0.85; margin-bottom: 15px; }
+        .footer-info { font-size: 13px; opacity: 0.7; line-height: 1.7; }
+        .social-icons a {
+            display: inline-block;
+            width: 38px;
+            height: 38px;
+            margin: 0 6px;
+            line-height: 38px;
+            text-align: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .social-icons a:hover { background: #dc3545; transform: scale(1.1); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .hero-header { height: 220px; }
+            .hero-header h1 { font-size: 30px; }
+            .content { padding: 25px 20px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .cta-button { padding: 12px 35px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="hero-header">
+            <div class="hero-icon">🍽️</div>
+            <h1>Welcome to PikaQuick!</h1>
+            <p>Fresh Food, Ready Fast</p>
+        </div>
+
+        <div class="content">
+            <h2 class="greeting">Hello, <span style="color: #dc3545;">{{ username }}</span>! 👋</h2>
+            <p class="welcome-text">
+                We're thrilled to have you join the <strong>PikaQuick</strong> family! Your account has been successfully created, 
+                and you're now ready to experience the fastest way to order delicious, quality food.
+            </p>
+
+            <div class="account-card">
+                <h3>📋 Your Account Information</h3>
+                <div class="detail-row">
+                    <span class="detail-label">👤 Username:</span>
+                    <span class="detail-value">{{ user.username }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">📧 Email:</span>
+                    <span class="detail-value">{{ user.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">📅 Joined:</span>
+                    <span class="detail-value">{{ registration_date }}</span>
+                </div>
+            </div>
+
+            <div class="features">
+                <h3>What You Can Do Now:</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">Browse Our Delicious Menu</div>
+                    <div class="feature-item">Add Items to Your Cart</div>
+                    <div class="feature-item">Pay Securely with M-Pesa</div>
+                    <div class="feature-item">Pick Up in 15 Minutes</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p style="font-weight: 600; font-size: 18px; color: #2c3e50; margin-bottom: 20px;">Ready to order your first meal?</p>
+                <a href="{{ site_url }}" class="cta-button">Start Ordering Now →</a>
+            </div>
+
+            <div class="support-box">
+                <h4>Need Help?</h4>
+                <p>
+                    Our support team is here for you! If you have any questions or need assistance, 
+                    feel free to reach out at <strong>support@pikaquick.com</strong> or call us at 
+                    <strong>+254 700 000 000</strong>
+                </p>
+            </div>
+
+            <p style="text-align: center; font-size: 13px; color: #999; font-style: italic; margin-top: 25px;">
+                If you didn't create this account, please ignore this email or contact us immediately.
+            </p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-brand">PikaQuick</div>
+            <div class="footer-tagline">Fresh Food, Ready Fast | Nairobi, Kenya</div>
+            <div class="social-icons">
+                <a href="#" title="Facebook">f</a>
+                <a href="#" title="Twitter">𝕏</a>
+                <a href="#" title="Instagram">📷</a>
+            </div>
+            <div class="footer-info">
+                <p>© 2025 PikaQuick. All rights reserved.</p>
+                <p style="font-size: 12px;">
+                    This email was sent to {{ user.email }} because you registered on PikaQuick.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

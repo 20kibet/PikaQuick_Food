@@ -9,8 +9,6 @@ from django.db.models import Count, Q
 import json
 from django.contrib.auth.models import User 
 from datetime import datetime
-
-# F:\PikaQuick\dashboard\views.py (Add this line with other model imports)
 from foods.models import Cart
 from foods.models import CartItem
 
@@ -30,8 +28,7 @@ def dashboard_home(request):
     available_foods = foods.filter(available=True).count()
     out_of_stock = foods.filter(available=False).count()
     
-    # Get unique categories (assuming you have a category field)
-    # If not, this will return 0
+    
     total_categories = foods.values('category').distinct().count()
     
     context = {
@@ -224,91 +221,3 @@ def print_report(request):
     
     return render(request, 'dashboard/print_report.html', context)
 
-# ============================================
-# Dashboard/urls.py - Updated with AJAX endpoints
-# ============================================
-
-"""
-from django.urls import path
-from . import views
-
-app_name = 'dashboard'
-
-urlpatterns = [
-    path('', views.dashboard_home, name='dashboard_home'),
-    path('manage/', views.manage_foods, name='manage_foods'),
-    path('add/', views.add_food, name='add_food'),
-    path('edit/<int:food_id>/', views.edit_food, name='edit_food'),
-    path('delete/<int:food_id>/', views.delete_food, name='delete_food'),
-    
-    # AJAX endpoints
-    path('toggle-availability/<int:food_id>/', views.toggle_availability, name='toggle_availability'),
-    path('update-price/<int:food_id>/', views.update_price, name='update_price'),
-]
-"""
-
-
-# ============================================
-# Foods/models.py - Make sure your Food model has these fields
-# ============================================
-
-"""
-from django.db import models
-
-class Food(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=100, blank=True)
-    image = models.ImageField(upload_to='foods/', blank=True, null=True)
-    available = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name_plural = 'Foods'
-"""
-
-
-# ============================================
-# pikaquick/settings.py - Add media files configuration
-# ============================================
-
-"""
-import os
-
-# Media files (uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-"""
-
-
-# ============================================
-# pikaquick/urls.py - Add media files serving
-# ============================================
-
-"""
-from django.conf import settings
-from django.conf.urls.static import static
-
-urlpatterns = [
-    # ... your existing urls
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-"""
-
-
-# ============================================
-# IMPORTANT: Install Pillow for image handling
-# ============================================
-
-"""
-pip install Pillow
-"""
